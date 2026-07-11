@@ -1,26 +1,27 @@
 """Tests for lesson 01."""
 
-from lessons.lesson01_advanced_functions.theory import greet, make_multiplier
-from lessons.lesson01_advanced_functions.solutions import merge_counts, make_formatter, repeat
+import pytest
+
+from lessons.lesson01_advanced_functions.solutions import calculate
 
 
-def test_greet() -> None:
-    assert greet("Ada") == "Hello, Ada!"
+def test_calculate_success() -> None:
+    assert calculate("add", 1, 2) == 3
+    assert calculate("subtract", 1, 2) == -1
+    assert calculate("multiply", 1, 2) == 2
+    assert calculate("divide", 1, 2) == 0.5
 
 
-def test_make_multiplier() -> None:
-    double = make_multiplier(2)
-    assert double(5) == 10
+def test_calculate_divide_by_zero() -> None:
+    with pytest.raises(ValueError, match="Cannot divide by zero"):
+        calculate("divide", 1, 0)
 
 
-def test_make_formatter() -> None:
-    warn = make_formatter("WARN")
-    assert warn("disk full") == "WARN: disk full"
+def test_calculate_invalid_operation() -> None:
+    with pytest.raises(ValueError, match="Invalid operation: invalid"):
+        calculate("invalid", 1, 2)
 
 
-def test_merge_counts() -> None:
-    assert merge_counts({"a": 1, "b": 2}, {"b": 3}) == {"a": 1, "b": 5}
-
-
-def test_repeat() -> None:
-    assert repeat(lambda value: value + 1, 3, 0) == 3
+def test_calculate_invalid_arguments() -> None:
+    with pytest.raises(ValueError, match=r"Invalid arguments: 1 and 2"):
+        calculate("add", "1", 2)

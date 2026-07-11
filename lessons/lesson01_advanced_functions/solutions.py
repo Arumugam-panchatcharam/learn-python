@@ -1,26 +1,41 @@
-"""Polished solutions for advanced functions."""
+def add (a: int , b: int) -> int:
+    """ Add two numbers """
+    return a + b
 
+def subtract (a: int , b: int) -> int:
+    """ Subtract two numbers """
+    return a - b
 
-from collections.abc import Callable
+def multiply (a: int , b: int) -> int:
+    """ Multiply two numbers """
+    return a * b
 
+def divide (a: int , b: int) -> float:
+    """ Divide two numbers """
+    try:
+        return a / b
+    except ZeroDivisionError:
+        raise ValueError("Cannot divide by zero")
+    
 
-def repeat(callable_: Callable[[int], int], times: int, value: int) -> int:
-    result = value
-    for _ in range(times):
-        result = callable_(result)
-    return result
+operations = {
+    "add": add,
+    "subtract": subtract,
+    "multiply": multiply,
+    "divide": divide,
+}
 
+def calculate(operation: str, a: int, b: int) -> float:
+    """ dispatch based on the operation and return result """
+    try:
+        return operations[operation](a, b)
+    except KeyError:
+        raise ValueError(f"Invalid operation: {operation}")
+    except TypeError:
+        raise ValueError(f"Invalid arguments: {a} and {b}")
 
-def make_formatter(prefix: str) -> Callable[[str], str]:
-    def format_message(message: str) -> str:
-        return f"{prefix}: {message}"
-
-    return format_message
-
-
-def merge_counts(*counters: dict[str, int]) -> dict[str, int]:
-    merged: dict[str, int] = {}
-    for counter in counters:
-        for key, value in counter.items():
-            merged[key] = merged.get(key, 0) + value
-    return merged
+if __name__ == "__main__":
+    print(calculate("add", 1, 2))
+    print(calculate("subtract", 1, 2))
+    print(calculate("multiply", 1, 2))
+    print(calculate("divide", 1, 2))
